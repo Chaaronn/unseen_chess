@@ -1,0 +1,45 @@
+{
+  "homebrew_version": "3.4.7-9-gbaceee9",
+  "used_options": [
+
+  ],
+  "unused_options": [
+
+  ],
+  "built_as_bottle": true,
+  "poured_from_bottle": true,
+  "installed_as_dependency": false,
+  "installed_on_request": true,
+  "changed_files": [
+
+  ],
+  "time": 1650388651,
+  "source_modified_time": 1650312200,
+  "compiler": "clang",
+  "aliases": [
+
+  ],
+  "runtime_dependencies": [
+
+  ],
+  "source": {
+    "spec": "stable",
+    "versions": {
+      "stable": "15",
+      "head": null,
+      "version_scheme": 0
+    },
+    "path": "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/stockfish.rb",
+    "tap_git_head": "c155e302fc7b86ec385efdd55c40654229c2115e",
+    "tap": "homebrew/core"
+  },
+  "arch": "x86_64",
+  "built_on": {
+    "os": "Macintosh",
+    "os_version": "macOS 10.15.7",
+    "cpu_family": "penryn",
+    "xcode": "12.4",
+    "clt": "12.0.0.32.29",
+    "preferred_perl": "5.18"
+  }
+}

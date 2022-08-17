@@ -1,0 +1,13 @@
+to get unseen fen:
+    get all pgns from all games
+    convert each move set into fen (depending on wanted depth)
+    compare all of these fen against the current position
+        not 'all', every fen for the current move (eg if its move 1, look at fen from this. if its 10,from this)
+
+effeciently converting all pgn
+    bottleneck of the program
+
+
+keeping the chosen move with the fen    
+    maybe use a dict? 
+        move : fen
