@@ -9,24 +9,25 @@ import os
 
 
 class PgnToFen:
-    fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
-    whiteToMove = True
-    internalChessBoard = [
-        'R','N','B','Q','K','B','N','R',
-        'P','P','P','P','P','P','P','P',
-        '1','1','1','1','1','1','1','1',
-        '1','1','1','1','1','1','1','1',
-        '1','1','1','1','1','1','1','1',
-        '1','1','1','1','1','1','1','1',
-        'p','p','p','p','p','p','p','p',
-        'r','n','b','q','k','b','n','r']
-    enpassant = '-'
-    castlingRights = 'KQkq'
-    DEBUG = True
-    lastMove = 'Before first move'
-    fens = []
-    result = ''
-
+    def __init__(self) -> None:
+        self.fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
+        self.whiteToMove = True
+        self.internalChessBoard = [
+            'R','N','B','Q','K','B','N','R',
+            'P','P','P','P','P','P','P','P',
+            '1','1','1','1','1','1','1','1',
+            '1','1','1','1','1','1','1','1',
+            '1','1','1','1','1','1','1','1',
+            '1','1','1','1','1','1','1','1',
+            'p','p','p','p','p','p','p','p',
+            'r','n','b','q','k','b','n','r']
+        self.enpassant = '-'
+        self.castlingRights = 'KQkq'
+        self.DEBUG = False
+        self.lastMove = 'Before first move'
+        self.fens = []
+        self.result = ''
+    
     def getFullFen(self):
         return self.getFen() + ' ' + ('w ' if self.whiteToMove else 'b ') + self.enpassant + ' ' + (self.castlingRights if self.castlingRights else '-')
 
@@ -35,14 +36,14 @@ class PgnToFen:
         for n in reversed((8,16,24,32,40,48,56,64)):
             emptyPosLength = 0;
             for i in self.internalChessBoard[n-8:n]:
-                if(i is not '1'):
-                    if(emptyPosLength is not 0):
+                if(i != '1'):
+                    if(emptyPosLength != 0):
                         fenpos = fenpos + str(emptyPosLength);
                         emptyPosLength = 0
                     fenpos = fenpos + i
                 else:
                     emptyPosLength = emptyPosLength + 1
-            if(emptyPosLength is not 0):
+            if(emptyPosLength != 0):
                 fenpos = fenpos + str(emptyPosLength);
             fenpos = fenpos + '/'
         fenpos = fenpos[:-1]
@@ -234,9 +235,9 @@ class PgnToFen:
         chessBoardNumber = self.placeOnBoard(row, column)
         piece = 'Q' if self.whiteToMove else 'q'
         possibelPositons = [i for i, pos in enumerate(self.internalChessBoard) if pos == piece]
-        self.internalChessBoard[chessBoardNumber] = piece
         self.validQueenMoves(possibelPositons, move, specificCol, specificRow)
-        
+        self.internalChessBoard[chessBoardNumber] = piece
+
     def validQueenMoves(self, posistions, move, specificCol, specificRow):
         newColumn = self.columnToInt(move[:1])
         newRow = self.rowToInt(move[1:2])
@@ -289,8 +290,8 @@ class PgnToFen:
         chessBoardNumber = self.placeOnBoard(row, column)
         piece = 'R' if self.whiteToMove else 'r'
         possibelPositons = [i for i, pos in enumerate(self.internalChessBoard) if pos == piece]
-        self.internalChessBoard[chessBoardNumber] = piece
         self.validRookMoves(possibelPositons, move, specificCol, specificRow)
+        self.internalChessBoard[chessBoardNumber] = piece
 
     def validRookMoves(self, posistions, move, specificCol, specificRow):
         newColumn = self.columnToInt(move[:1])
@@ -365,8 +366,8 @@ class PgnToFen:
         chessBoardNumber = self.placeOnBoard(row, column)
         piece = 'B' if self.whiteToMove else 'b'
         possibelPositons = [i for i, pos in enumerate(self.internalChessBoard) if pos == piece]
-        self.internalChessBoard[chessBoardNumber] = piece
         self.validBishopMoves(possibelPositons, move, specificCol, specificRow)
+        self.internalChessBoard[chessBoardNumber] = piece
 
     def validBishopMoves(self, posistions, move, specificCol, specificRow):
         newColumn = self.columnToInt(move[:1])
@@ -416,8 +417,8 @@ class PgnToFen:
         chessBoardNumber = self.placeOnBoard(row, column)
         piece = 'N' if self.whiteToMove else 'n'
         knightPositons = [i for i, pos in enumerate(self.internalChessBoard) if pos == piece]
-        self.internalChessBoard[chessBoardNumber] = piece
         self.validKnighMoves(knightPositons, move, specificCol, specificRow)
+        self.internalChessBoard[chessBoardNumber] = piece
 
     def validKnighMoves(self, posistions, move, specificCol, specificRow):
         newColumn = self.columnToInt(move[:1])
@@ -447,8 +448,6 @@ class PgnToFen:
     def pawnMove(self, toPosition, specificCol, specificRow, takes, promote):
         column = toPosition[:1]
         row = toPosition[1:2]
-        prevEnpassant = self.enpassant
-        self.enpassant = '-'
         chessBoardNumber = self.placeOnBoard(row, column)
         if(promote):
             piece = promote if self.whiteToMove else promote.lower()
@@ -459,10 +458,10 @@ class PgnToFen:
             removeFromRow = (int(row) - 1) if self.whiteToMove else (int(row) + 1)
             posistion = self.placeOnBoard(removeFromRow, specificCol)
             piece = self.internalChessBoard[posistion] = '1'
-            if(prevEnpassant != '-'):
-                enpassantPos = self.placeOnBoard(prevEnpassant[1], prevEnpassant[0])
+            if(self.enpassant != '-'):
+                enpassantPos = self.placeOnBoard(self.enpassant[1], self.enpassant[0])
                 toPositionPos = self.placeOnBoard(toPosition[1], toPosition[0])
-                if(prevEnpassant == toPosition):
+                if(self.enpassant == toPosition):
                     if(self.whiteToMove == True):
                         self.internalChessBoard[chessBoardNumber - 8] = '1'
                     else:
@@ -494,10 +493,8 @@ class PgnToFen:
             else:
                 if(self.whiteToMove == True):
                     posistion = posistion - step
-                    self.enpassant = '-'
                 else:
                     posistion = posistion + step
-                    self.enpassant = '-'
                 piece = self.internalChessBoard[posistion]
 
 
@@ -597,12 +594,10 @@ class PgnToFen:
         else:
             xVect = -(diffCol / abs(diffCol))
             yVect = -(diffRow / abs(diffCol))
-
         checkPos = kingPos
         nothingInBetween = True
-        while checkPos != piecePos and (checkPos < 64 and checkPos >= 0):
+        while checkPos != piecePos and (checkPos < 64 and checkPos > 0):
             checkPos = int(checkPos + yVect * 8 + xVect)
-
             if(checkPos == piecePos):
                 continue
             if self.internalChessBoard[checkPos] != "1":
@@ -613,8 +608,6 @@ class PgnToFen:
         # No piece between the king and the piece, need to verify if an enemy piece with the possibily to go that  direction exist
 
         columnNr = (piecePos % 8)
-        searchRow = pieceRowInt
-        
         if(xVect == 1):
             columnsLeft = 7- columnNr
         else:
@@ -624,20 +617,17 @@ class PgnToFen:
         while checkPos >= 0 and checkPos < 64 and columnsLeft > -1:
             columnsLeft = columnsLeft - abs(xVect)
             checkPos = int(checkPos + posInMove)
-            currentRow = math.floor(checkPos/8)
-
             if(checkPos < 0 or checkPos > 63):
                 continue
-            if self.internalChessBoard[checkPos] in self.getOppositePieces(["Q", "R"]) and xVect == 0:
+            if self.internalChessBoard[checkPos] in self.getOppositePieces(["Q", "R"]) and (xVect == 0 or yVect == 0):
                 return False
-            elif self.internalChessBoard[checkPos] in self.getOppositePieces(["Q", "R"]) and yVect == 0 and searchRow == currentRow:
+            elif self.internalChessBoard[checkPos] in self.getOppositePieces(["Q", "B"]) and True:
+                #TODO: check direction
                 return False
-            elif self.internalChessBoard[checkPos] in self.getOppositePieces(["Q", "B"]) and (abs(xVect) == abs(yVect)):
-                return False
-            elif self.internalChessBoard[checkPos] != "1":
-                return True
-
+            #else:
+                #print('Friendly pieces or empty:', self.internalChessBoard[checkPos], checkPos)
         return True
+
     def getOppositePieces(self, pieces):
             """"
                 Takes a list of pieces and returns it in uppercase if blacks turn, or lowercase if white.
@@ -658,42 +648,8 @@ class PgnToFen:
             return posistionsOnBoard
 
 if __name__ == "__main__":
-    f = open("1999.txt", "r")
-    g = open("production.txt", "w")
-    h = open("fails.txt", "w")
-
-    for line in f:
-    
-        pgnFormat = line[2:-1]
-        winner = line[0]
-        if winner == "W":
-            win_text = " 1 0 0"
-        elif winner == "R":
-            win_text = " 0 1 0"
-        elif winner == "B":
-            win_text = " 0 0 1"
-        else:
-            print("error")
-
-        converter = PgnToFen()
-        
-        converter.resetBoard()
-
-        mid_liste = []
-
-        try:
-        
-            for move in pgnFormat.split(' '):
-                converter.move(move)
-                mid_liste.append(converter.getFullFen() + win_text)
-
-            for unit in mid_liste:
-                g.write(unit + "\n")
-
-        except:
-
-            h.write(line)
-
-    f.close()
-    g.close()
-    h.close()
+    pgnFormat = 'c4 Nc6 Nc3 e5 Nf3 Nf6 g3 d5 cxd5 Nxd5 Bg2 Nb6 O-O Be7 a3 Be6 b4 a5 b5 Nd4 Nxd4 exd4 Na4 Bd5 Nxb6 cxb6 Bxd5'
+    converter = PgnToFen()
+    for move in pgnFormat.split(' '):
+        converter.move(move)
+        print(converter.getFullFen())

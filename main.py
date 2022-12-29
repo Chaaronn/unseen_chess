@@ -9,26 +9,27 @@
 # https://lichess.org/account/oauth/token
 
 
-import stockfish
+from stockfish import Stockfish
 import lichess.api
 from lichess.format import SINGLE_PGN
 import chess
 import chess.polyglot
 import utils
+from pathlib import Path
 
 # global vars
-USERNAME = 'NicholasGoatifi'                    # username to search games for (mine by default)
+USERNAME = 'catwith2rooks'                      # username to search games for (mine by default)
 TOKEN = 'lip_ftSE6O8mT0zwHEJ2qKzq'              # token for lichess api (from Unseen_BOT account)
 board = chess.Board(chess.STARTING_FEN)         # board for use in analysis
-TEST_MODE = False                                # if we're in test mode
+TEST_MODE = False                               # if we're in test mode
 AI_COLOUR = 'Black'                             # force the AI colour
-ENGINE_DEPTH = 1                                # depth for the created engine
+ENGINE_DEPTH = 10                               # depth for the created engine
 user = lichess.api.user(USERNAME)               # Lichess user for getting games
 #print(user['perfs']['rapid']['rating'])
 
 
 # setup engine
-stockfish_engine = stockfish.Stockfish(path='stockfish/15/bin/stockfish',
+stockfish_engine = Stockfish(path='stockfish\\15.1\\stockfish.exe',
                                         depth=ENGINE_DEPTH, parameters={'Hash':2048})
 
 
